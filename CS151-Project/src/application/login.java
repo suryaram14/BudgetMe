@@ -13,7 +13,6 @@ public class login extends Application {
 		try {
 			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("login.FXML"));
 			Scene scene = new Scene(root, 700, 400);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (Exception e) {
