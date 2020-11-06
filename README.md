@@ -1,7 +1,7 @@
 # CS151-Project
 Expense Management System
 
-To run homepage click on Main.java and from here the functionality that are added are adding transactions + deleting transactions.
+To run homepage click on Main.java in the homePage package. From here the functionality that we added are adding transactions + deleting transactions.
 
 
 
