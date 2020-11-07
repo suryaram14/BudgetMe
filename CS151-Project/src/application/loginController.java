@@ -46,7 +46,7 @@ public class loginController implements Initializable {
 		} else {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs151-project", "root", "password");
+				con = DriverManager.getConnection("jdbc:mysql://192.168.1.153/cs151-project", "newuser", "password");
 				prepStmt = con.prepareStatement("SELECT * FROM users WHERE username=? AND password=?");
 				prepStmt.setString(1, username);
 				prepStmt.setString(2, password);
