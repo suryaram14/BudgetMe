@@ -21,26 +21,26 @@ Database details are provided below
 
 
 
-create database Account_database;
+    create database Account_database;
 
-use Account_database;
+    use Account_database;
 
-create table Account(
-transactionID int, 
-date date,
-description varchar(30),
-amount float(10)
-);
+    create table Account(
+    transactionID int, 
+    date date,
+    description varchar(30),
+    amount float(10)
+    );
 
-SET SQL_SAFE_UPDATES = 0;
+    SET SQL_SAFE_UPDATES = 0;
 
-create table users(
-user_id int PRIMARY KEY AUTO_INCREMENT,
-username varchar(30),
-password varchar(30)
-);
+    create table users(
+    user_id int PRIMARY KEY AUTO_INCREMENT,
+    username varchar(30),
+    password varchar(30)
+    );
 
-insert into users(username, password) values('test','test');
+    insert into users(username, password) values('test','test');
 
 
 
