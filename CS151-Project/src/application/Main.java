@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 
 
 
-public class HomePage extends Application {
+public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {

@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 
 public class MySQLCon {
 
+	// Connection will connect to mySQL database and return the connection successfully if connector file is referenced in file
+	
 	public static Connection connectionDB() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

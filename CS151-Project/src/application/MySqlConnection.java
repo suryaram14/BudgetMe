@@ -12,6 +12,8 @@ import javafx.collections.ObservableList;
 public class MySqlConnection {
 	Connection conn = null;
 	
+	// Connection will connect to mySQL database and return the connection successfully if connector file is referenced in file
+	
 	public static Connection ConnectDb() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -23,6 +25,7 @@ public class MySqlConnection {
 		}
 	}
 	
+	// method to get all data from database and input into table view for user to see when the application is opened
 	public static ObservableList<Account> getAccountData(){
 		Connection conn = ConnectDb();
 		ObservableList<Account> list = FXCollections.observableArrayList();

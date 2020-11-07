@@ -3,11 +3,13 @@ package application;
 import java.util.Date;
 
 public class Account {
+	// variables for user input
 	int transactionID;
 	Date date;
 	String description;
 	float amount;
 	
+	// constructors for variables
 	public Account(int transactionID, Date date, String description, float amount) {
 		super();
 		this.transactionID = transactionID;
@@ -15,6 +17,8 @@ public class Account {
 		this.description = description;
 		this.amount = amount;
 	}
+	
+	// getters and setters for all variables
 	
 	public int getTransactionID() {
 		return transactionID;

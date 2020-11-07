@@ -20,7 +20,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
 public class MainController implements Initializable{
-
+	// all FXML initializing variables
+	
 	@FXML
     private TableView<Account> tableTransactions;
 
@@ -52,11 +53,17 @@ public class MainController implements Initializable{
     private AnchorPane HomePagePane;
 
     ObservableList<Account> lists;
-    int index = -1;
     
+    // variables associated with mySQL
     Connection conn = null;
     ResultSet rs = null;
     PreparedStatement ps = null; 
+    
+	/* to add transaction, user must input all fields
+	 * after inputting all fields, if everything is input correctly,
+	 * an alert message shows up confirming the adding of a transaction.
+	 * 
+	 * if transaction is unsuccessful, an Error alert will pop up*/
     
     public void addTransaction() {
     	conn = MySqlConnection.ConnectDb();
@@ -79,6 +86,9 @@ public class MainController implements Initializable{
     	}
     }
     
+    // helper method to update the table view after user inputs a transaction
+    // helper method is called to updated table after every add and delete function
+    // this helps table update dynamically
     public void UpdateTransaction(){
     	col_transactionID.setCellValueFactory(new PropertyValueFactory<Account,Integer>("transactionID"));
     	col_date.setCellValueFactory(new PropertyValueFactory<Account,Date>("date"));
@@ -89,6 +99,12 @@ public class MainController implements Initializable{
         tableTransactions.setItems(lists);
     }
     
+	/* to delete transaction, user must input transaction ID.
+	 * if transaction ID matches an ID in the table, user can delete a transaction.
+	 * Success Confirmation message will show up and alert user that the deletion was successful
+	 * 
+	 * if user does not input a proper transaction ID to be deleted,
+	 * Error alert message shows up*/
     public void deleteTransaction(){
     	conn = MySqlConnection.ConnectDb();
     	String sqlDelete = "delete from Account where transactionID = ?";
@@ -106,7 +122,7 @@ public class MainController implements Initializable{
     	}
     }
     
-    
+    // Initialize method to set and grab values from table in database
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		// TODO Auto-generated method stub
