@@ -2,8 +2,8 @@ package application;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class login extends Application {
@@ -11,7 +11,7 @@ public class login extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("login.FXML"));
+			Parent root = FXMLLoader.load(getClass().getResource("/application/login.FXML"));
 			Scene scene = new Scene(root, 700, 400);
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -19,6 +19,9 @@ public class login extends Application {
 			e.printStackTrace();
 		}
 
+	}
+	public static void main(String[] args) {
+		launch(args);
 	}
 
 }

@@ -7,9 +7,8 @@ public class MySQLCon {
 
 	public static Connection connectionDB() {
 		try {
-			java.sql.Connection con;
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs151-project", "root", "password");
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
 			System.out.println("Success");
 			return con;
 		} catch (Exception e) {
