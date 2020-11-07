@@ -1,4 +1,4 @@
-package application;
+package login;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +11,7 @@ public class login extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("/application/login.FXML"));
+			Parent root = FXMLLoader.load(getClass().getResource("/login/login.FXML"));
 			Scene scene = new Scene(root, 800, 550);
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -20,6 +20,7 @@ public class login extends Application {
 		}
 
 	}
+
 	public static void main(String[] args) {
 		launch(args);
 	}

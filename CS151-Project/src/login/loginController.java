@@ -1,4 +1,4 @@
-package application;
+package login;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +31,7 @@ public class loginController implements Initializable {
 
 	@FXML
 	private TextField lblInvalid;
-	
+
 	@FXML
 	private AnchorPane LoginPane;
 
@@ -43,8 +43,7 @@ public class loginController implements Initializable {
 	// Sample
 	// username: test
 	// password: test
-	
-	
+
 	@FXML
 	void login(ActionEvent event) {
 		String username = txtUsername.getText();
@@ -55,7 +54,8 @@ public class loginController implements Initializable {
 			lblInvalid.setText("Invalid");
 		} else {
 			// To login connect mysql database with eclipse
-			// if username and password fields are blank, we can set username and passwords by inserting into mysql database
+			// if username and password fields are blank, we can set username and passwords
+			// by inserting into mysql database
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
@@ -64,18 +64,18 @@ public class loginController implements Initializable {
 				prepStmt.setString(2, password);
 
 				rs = prepStmt.executeQuery();
-				
+
 				// if username and password match - go to Main page
 				if (rs.next()) {
 					try {
-						AnchorPane pane = FXMLLoader.load(getClass().getResource("Main.FXML"));
+						AnchorPane pane = FXMLLoader.load(getClass().getResource("/application/Main.FXML"));
 						LoginPane.getChildren().setAll(pane);
-						
+
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+
 					// if username and password dont match, set to Invalid and clear text inputs
 				} else {
 					lblInvalid.setText("Invalid");
