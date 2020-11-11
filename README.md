@@ -1,7 +1,7 @@
 # CS151-Project
 Expense Management System
 
-To run homepage click on Main.java in the application package. From here the functionality that we added are adding transactions + deleting transactions.
+To run homepage click on Main.java in the application package. From here the functionality that we added are adding transactions + deleting transactions. To add fill in details of date, description, and amount and click on "Add" button. To delete a transaction click on the row of the transaction and press delete.
 
 
 
@@ -26,7 +26,7 @@ Database details are provided below
     use Account_database;
 
     create table Account(
-    transactionID int, 
+    transactionID int PRIMARY KEY auto_increment, 
     date date,
     description varchar(30),
     amount float(10)
@@ -55,7 +55,7 @@ DEMO
 
 
 
-![ezgif com-gif-maker](https://user-images.githubusercontent.com/60376265/98431668-47514f80-206c-11eb-9864-72096fe161d5.gif)
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/60376265/98766098-d4114b80-2393-11eb-96a2-ea548f2ac105.gif)
 
 
 
