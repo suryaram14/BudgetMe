@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 public class MainController implements Initializable{
@@ -54,6 +55,8 @@ public class MainController implements Initializable{
 
     ObservableList<Account> lists;
     
+    int index = -1;
+    
     // variables associated with mySQL
     Connection conn = null;
     ResultSet rs = null;
@@ -67,13 +70,12 @@ public class MainController implements Initializable{
     
     public void addTransaction() {
     	conn = MySqlConnection.ConnectDb();
-    	String sqlAdd = "insert into Account (transactionID, date, description, amount) values(?,?,?,?)";
+    	String sqlAdd = "insert into Account (date, description, amount) values(?,?,?)";
     	try {
     		ps = conn.prepareStatement(sqlAdd);
-    		ps.setString(1, txt_transactionID.getText());
-    		ps.setString(2, txt_date.getValue().toString());
-    		ps.setString(3, txt_description.getText());
-    		ps.setString(4, txt_amount.getText());
+    		ps.setString(1, txt_date.getValue().toString());
+    		ps.setString(2, txt_description.getText());
+    		ps.setString(3, txt_amount.getText());
     		ps.execute();
     		
     		
@@ -120,6 +122,24 @@ public class MainController implements Initializable{
     		Alert alertError = new Alert(AlertType.ERROR);
     		alertError.showAndWait();
     	}
+    }
+    
+	/*method to get each row in the data table
+	 * If row is selected we can click on it.
+	 * Once clicked on, we can delete transaction from here
+	 * 
+	 * On Mouse Clicked handles this method in the table*/
+    public void getRow(MouseEvent e) {
+    	conn = MySqlConnection.ConnectDb();
+    	index = tableTransactions.getSelectionModel().getSelectedIndex();
+    	
+    	if(index <= -1)
+    		return;
+    	
+    	txt_transactionID.setText(col_transactionID.getCellData(index).toString());
+    	txt_date.setPromptText(col_date.getCellData(index).toString());
+    	txt_description.setText(col_description.getCellData(index).toString());
+    	txt_amount.setText(col_amount.getCellData(index).toString());
     }
     
     // Initialize method to set and grab values from table in database

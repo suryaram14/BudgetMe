@@ -34,7 +34,7 @@ public class MySqlConnection {
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
-				list.add(new Account(rs.getInt("transactionID"), rs.getDate("date"), rs.getString("description"), rs.getFloat("amount")));
+				list.add(new Account(Integer.parseInt(rs.getString("transactionID")), rs.getDate("date"), rs.getString("description"), rs.getFloat("amount")));
 			}
 		}catch(Exception e) {
 		}
