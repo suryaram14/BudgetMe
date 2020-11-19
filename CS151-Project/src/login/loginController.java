@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -35,6 +36,9 @@ public class loginController implements Initializable {
 	@FXML
 	private AnchorPane LoginPane;
 
+	@FXML
+	private Hyperlink createAccLink;
+
 	// variables associated with mySQL
 	Connection con;
 	PreparedStatement prepStmt;
@@ -44,8 +48,27 @@ public class loginController implements Initializable {
 	// username: test
 	// password: test
 
+	public void handle(ActionEvent event) {
+		if (event.getSource() == createAccLink) {
+			createAcc();
+		} else {
+			login();
+		}
+	}
+
 	@FXML
-	void login(ActionEvent event) {
+	void createAcc() {
+		try {
+			AnchorPane pane = FXMLLoader.load(getClass().getResource("/createAccount/createAccount.FXML"));
+			LoginPane.getChildren().setAll(pane);
+		} catch (IOException error) {
+			error.printStackTrace();
+		}
+
+	}
+
+	@FXML
+	void login() {
 		String username = txtUsername.getText();
 		String password = txtPassword.getText();
 
@@ -57,8 +80,8 @@ public class loginController implements Initializable {
 			// if username and password fields are blank, we can set username and passwords
 			// by inserting into mysql database
 			try {
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs151-project", "root", "password");
 				prepStmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
 				prepStmt.setString(1, username);
 				prepStmt.setString(2, password);

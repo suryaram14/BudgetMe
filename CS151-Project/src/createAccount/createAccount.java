@@ -1,4 +1,4 @@
-package login;
+package createAccount;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -6,13 +6,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class login extends Application {
-
+public class createAccount extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("/login/login.FXML"));
-			Scene scene = new Scene(root, 700, 400);
+			Parent root = FXMLLoader.load(getClass().getResource("/createAccount/createAccount.FXML"));
+			Scene scene = new Scene(root, 800, 550);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (Exception e) {
