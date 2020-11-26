@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import application.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,9 +68,11 @@ public class loginController implements Initializable {
 
 	}
 
+	public String username;
+
 	@FXML
 	void login() {
-		String username = txtUsername.getText();
+		username = txtUsername.getText();
 		String password = txtPassword.getText();
 
 		// If username and password are null, and Invalid message will appear
@@ -91,7 +94,15 @@ public class loginController implements Initializable {
 				// if username and password match - go to Main page
 				if (rs.next()) {
 					try {
-						AnchorPane pane = FXMLLoader.load(getClass().getResource("/application/Main.FXML"));
+						MainController mainControl = new MainController();
+						mainControl.setUsername(username);
+						FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/Main.FXML"));
+						loader.setController(mainControl);
+						// FXMLLoader loader = new
+						// FXMLLoader(getClass().getResource("/application/Main.FXML"));
+						AnchorPane pane = loader.load();
+						// MainController mainControl = loader.getController();
+						// mainControl.setUsername(username);
 						LoginPane.getChildren().setAll(pane);
 
 					} catch (IOException e) {
@@ -111,6 +122,10 @@ public class loginController implements Initializable {
 				System.out.println(ex);
 			}
 		}
+	}
+
+	public String getUsername() {
+		return username;
 	}
 
 	@Override

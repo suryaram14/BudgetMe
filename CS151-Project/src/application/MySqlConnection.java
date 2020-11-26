@@ -27,14 +27,22 @@ public class MySqlConnection {
 		}
 	}
 
+	String username;
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	// method to get all data from database and input into table view for user to
 	// see when the application is opened
-	public static ObservableList<Account> getAccountData() {
+	public ObservableList<Account> getAccountData() {
 		Connection conn = ConnectDb();
 		ObservableList<Account> list = FXCollections.observableArrayList();
 		try {
-			PreparedStatement ps = conn.prepareStatement("select * from Account");
+			PreparedStatement ps = conn.prepareStatement("select * from Account where username = ?");
+			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
+			System.out.println(ps.toString());
 
 			while (rs.next()) {
 				list.add(new Account(Integer.parseInt(rs.getString("transactionID")), rs.getDate("date"),
