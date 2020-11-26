@@ -14,6 +14,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
@@ -98,11 +100,8 @@ public class loginController implements Initializable {
 						mainControl.setUsername(username);
 						FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/Main.FXML"));
 						loader.setController(mainControl);
-						// FXMLLoader loader = new
-						// FXMLLoader(getClass().getResource("/application/Main.FXML"));
+
 						AnchorPane pane = loader.load();
-						// MainController mainControl = loader.getController();
-						// mainControl.setUsername(username);
 						LoginPane.getChildren().setAll(pane);
 
 					} catch (IOException e) {
@@ -112,9 +111,8 @@ public class loginController implements Initializable {
 
 					// if username and password dont match, set to Invalid and clear text inputs
 				} else {
-					lblInvalid.setText("Invalid");
-					txtUsername.setText("");
-					txtPassword.setText("");
+					Alert alertError = new Alert(AlertType.ERROR);
+					alertError.showAndWait();
 				}
 			} catch (SQLException e) {
 				System.out.println(e);
