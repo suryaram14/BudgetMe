@@ -1,17 +1,30 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -19,6 +32,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 
 public class MainController implements Initializable {
 	// all FXML initializing variables
@@ -34,9 +48,12 @@ public class MainController implements Initializable {
 
 	@FXML
 	private TableColumn<Account, String> col_description;
+	
+	@FXML
+    private TableColumn<Account, String> col_category;
 
 	@FXML
-	private TableColumn<Account, Float> col_amount;
+	private TableColumn<Account, Double> col_amount;
 
 	@FXML
 	private TextField txt_amount;
@@ -46,12 +63,21 @@ public class MainController implements Initializable {
 
 	@FXML
 	private DatePicker txt_date;
-
+	
 	@FXML
-	private TextField txt_transactionID;
-
+    private TextField txt_transactionID;
+	
+	@FXML
+	private ComboBox<String> txt_category;
+	 
 	@FXML
 	private AnchorPane HomePagePane;
+	
+	@FXML
+    private BorderPane barChartBorderPane;
+
+    @FXML
+    private BorderPane pieChartBorderPane;
 
 	ObservableList<Account> lists;
 
@@ -72,6 +98,7 @@ public class MainController implements Initializable {
 	public String getUsername() {
 		return username;
 	}
+	
 
 	/*
 	 * to add transaction, user must input all fields after inputting all fields, if
@@ -83,17 +110,16 @@ public class MainController implements Initializable {
 
 	public void addTransaction() {
 		conn = MySqlConnection.ConnectDb();
-		String sqlAdd = "insert into Account (username, transactionID, date, description, amount) values(?,?,?,?,?)";
+		String sqlAdd = "insert into Account (username, date, description, category, amount) values(?,?,?,?,?)";
 		try {
 			ps = conn.prepareStatement(sqlAdd);
 			ps.setString(1, username);
-			ps.setString(2, txt_transactionID.getText());
-			ps.setString(3, txt_date.getValue().toString());
-			ps.setString(4, txt_description.getText());
+			ps.setString(2, txt_date.getValue().toString());
+			ps.setString(3, txt_description.getText());
+			ps.setString(4, txt_category.getValue().toString());
 			ps.setString(5, txt_amount.getText());
 			ps.execute();
 
-			System.out.println(ps.toString());
 			Alert alertSuccess = new Alert(AlertType.CONFIRMATION);
 			alertSuccess.showAndWait();
 			UpdateTransaction();
@@ -111,7 +137,8 @@ public class MainController implements Initializable {
 		col_transactionID.setCellValueFactory(new PropertyValueFactory<Account, Integer>("transactionID"));
 		col_date.setCellValueFactory(new PropertyValueFactory<Account, Date>("date"));
 		col_description.setCellValueFactory(new PropertyValueFactory<Account, String>("description"));
-		col_amount.setCellValueFactory(new PropertyValueFactory<Account, Float>("amount"));
+		col_category.setCellValueFactory(new PropertyValueFactory<Account, String>("category"));
+		col_amount.setCellValueFactory(new PropertyValueFactory<Account, Double>("amount"));
 		mySqlCon.setUsername(username);
 		lists = mySqlCon.getAccountData();
 		tableTransactions.setItems(lists);
@@ -155,21 +182,81 @@ public class MainController implements Initializable {
 
 		if (index <= -1)
 			return;
-
+		
 		txt_transactionID.setText(col_transactionID.getCellData(index).toString());
 		txt_date.setPromptText(col_date.getCellData(index).toString());
 		txt_description.setText(col_description.getCellData(index).toString());
+		txt_category.setPromptText(col_category.getCellData(index).toString());
 		txt_amount.setText(col_amount.getCellData(index).toString());
+	}
+	
+	/*
+	 * to view a bar chart representation of their expenses, the user must click on
+	 * 'Bar Chart View' and it will show a chart of their expenses split up in a bar
+	 * chart
+	 */
+	
+	public void goToBarChart(ActionEvent event) throws SQLException {
+		conn = MySqlConnection.ConnectDb();
+		
+		CategoryAxis xAxis = new CategoryAxis();
+		xAxis.setLabel("Category");
+		NumberAxis yAxis = new NumberAxis();
+		yAxis.setLabel("Amount");
+		
+		BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis, yAxis);
+		
+		XYChart.Series<String, Number> xyChart = new XYChart.Series<String, Number>();
+		String sql = "select category, amount from Account order by amount asc";
+		ps = conn.prepareStatement(sql);
+		rs = ps.executeQuery();
+			
+		while(rs.next()) {
+			xyChart.getData().add(new XYChart.Data<String, Number>(rs.getString("category"), rs.getDouble("amount")));		
+		}
+		
+		barChart.getData().add(xyChart);
+		barChart.setLegendVisible(false);
+		
+		barChartBorderPane.setCenter(barChart);
+	}
+	
+	
+	/*
+	 * to view a bar chart representation of their expenses, the user must click on
+	 * 'Pie Chart View' and it will show a chart of their expenses sliced in a pie
+	 * chart
+	 */
+	public void goToPieChart(ActionEvent event) throws SQLException {
+		conn = MySqlConnection.ConnectDb();
+		
+		PieChart pieChart = new PieChart();
+		
+		ObservableList<PieChart.Data> list = FXCollections.observableArrayList();
+		String sql = "select * from Account";
+		ps = conn.prepareStatement(sql);
+		rs = ps.executeQuery();
+		
+		while(rs.next()) {
+			list.add(new PieChart.Data(rs.getString("category"),rs.getDouble("amount")));		
+		}
+		
+		pieChart.getData().addAll(list);
+		
+		pieChartBorderPane.setCenter(pieChart);
 	}
 
 	// Initialize method to set and grab values from table in database
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		// TODO Auto-generated method stub
+		txt_category.getItems().addAll("Housing", "Utilities", "Misc.", "Transportation", "Clothing", "Medical", "Food", "Debt Payments");
+		
 		col_transactionID.setCellValueFactory(new PropertyValueFactory<Account, Integer>("transactionID"));
 		col_date.setCellValueFactory(new PropertyValueFactory<Account, Date>("date"));
 		col_description.setCellValueFactory(new PropertyValueFactory<Account, String>("description"));
-		col_amount.setCellValueFactory(new PropertyValueFactory<Account, Float>("amount"));
+		col_category.setCellValueFactory(new PropertyValueFactory<Account, String>("category"));
+		col_amount.setCellValueFactory(new PropertyValueFactory<Account, Double>("amount"));
 		mySqlCon.setUsername(username);
 		lists = mySqlCon.getAccountData();
 		tableTransactions.setItems(lists);

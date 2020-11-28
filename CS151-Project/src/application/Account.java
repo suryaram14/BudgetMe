@@ -7,14 +7,16 @@ public class Account {
 	int transactionID;
 	Date date;
 	String description;
-	float amount;
+	String category;
+	double amount;
 	
 	// constructors for variables
-	public Account(int transactionID, Date date, String description, float amount) {
+	public Account(int transactionID, Date date, String description, String category, double amount) {
 		super();
 		this.transactionID = transactionID;
 		this.date = date;
 		this.description = description;
+		this.category = category;
 		this.amount = amount;
 	}
 	
@@ -40,11 +42,19 @@ public class Account {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDescription(String category) {
+		this.category = category;
+	}
+	
+	public String getCategory() {
+		return category;
 	}
 
-	public float getAmount() {
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public double getAmount() {
 		return amount;
 	}
 

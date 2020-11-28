@@ -85,8 +85,8 @@ public class loginController implements Initializable {
 			// if username and password fields are blank, we can set username and passwords
 			// by inserting into mysql database
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs151-project", "root", "password");
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
 				prepStmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
 				prepStmt.setString(1, username);
 				prepStmt.setString(2, password);
