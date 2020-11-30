@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -21,6 +22,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 public class loginController implements Initializable {
 	// defined fields in login.FXML
@@ -85,8 +87,9 @@ public class loginController implements Initializable {
 			// if username and password fields are blank, we can set username and passwords
 			// by inserting into mysql database
 			try {
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs151-project?useSSL=false", "root",
+						"password");
 				prepStmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
 				prepStmt.setString(1, username);
 				prepStmt.setString(2, password);
@@ -96,13 +99,18 @@ public class loginController implements Initializable {
 				// if username and password match - go to Main page
 				if (rs.next()) {
 					try {
+						Stage loginStage = (Stage) LoginPane.getScene().getWindow();
+						loginStage.close();
 						MainController mainControl = new MainController();
 						mainControl.setUsername(username);
 						FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/Main.FXML"));
 						loader.setController(mainControl);
-
 						AnchorPane pane = loader.load();
-						LoginPane.getChildren().setAll(pane);
+						Scene scene = new Scene(pane, 935, 901);
+						Stage stage = new Stage();
+						stage.setScene(scene);
+						stage.show();
+						// LoginPane.getChildren().setAll(pane);
 
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

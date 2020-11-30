@@ -13,12 +13,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 
 public class createAccountController implements Initializable {
@@ -34,14 +32,14 @@ public class createAccountController implements Initializable {
 
 	@FXML
 	private AnchorPane createAccPane;
-	
+
 	@FXML
-    private Hyperlink loginLink;
+	private Hyperlink loginLink;
 
 	Connection con;
 	PreparedStatement prepStmt;
 	ResultSet rs;
-	
+
 	public void handle(ActionEvent event) throws ClassNotFoundException {
 		if (event.getSource() == loginLink) {
 			goToLogin();
@@ -49,7 +47,7 @@ public class createAccountController implements Initializable {
 			register(event);
 		}
 	}
-	
+
 	@FXML
 	void goToLogin() {
 		try {
@@ -66,8 +64,9 @@ public class createAccountController implements Initializable {
 		String username = txtUsername.getText();
 		String password = txtPassword.getText();
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs151-project?useSSL=false", "root",
+					"password");
 			prepStmt = con.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?)");
 			prepStmt.setString(1, username);
 			prepStmt.setString(2, password);

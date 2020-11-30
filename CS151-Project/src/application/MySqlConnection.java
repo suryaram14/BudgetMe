@@ -17,8 +17,9 @@ public class MySqlConnection {
 
 	public static Connection ConnectDb() {
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs151-project?useSSL=false",
+					"root", "password");
 			return conn;
 		} catch (ClassNotFoundException | SQLException ex) {
 			System.err.println("MySqlConnection : " + ex.getMessage());
@@ -44,7 +45,8 @@ public class MySqlConnection {
 			System.out.println(ps.toString());
 
 			while (rs.next()) {
-				list.add(new Account(Integer.parseInt(rs.getString("transactionID")), rs.getDate("date"), rs.getString("description"), rs.getString("category"), rs.getDouble("amount")));
+				list.add(new Account(Integer.parseInt(rs.getString("transactionID")), rs.getDate("date"),
+						rs.getString("description"), rs.getString("category"), rs.getDouble("amount")));
 			}
 		} catch (Exception e) {
 		}
