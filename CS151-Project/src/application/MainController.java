@@ -20,6 +20,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.PieChart.Data;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -73,15 +74,16 @@ public class MainController implements Initializable {
 
 	@FXML
 	private Button logOutBtn;
+	
+	@FXML
+	private Button pieChartButton;
+
+	@FXML
+	private Button barChartButton;
 
 	@FXML
 	private AnchorPane HomePagePane;
-
-	@FXML
-	private BorderPane barChartBorderPane;
-
-	@FXML
-	private BorderPane pieChartBorderPane;
+	
 
 	ObservableList<Account> lists;
 
@@ -192,7 +194,7 @@ public class MainController implements Initializable {
 		txt_category.setPromptText(col_category.getCellData(index).toString());
 		txt_amount.setText(col_amount.getCellData(index).toString());
 	}
-
+	
 	/*
 	 * to view a bar chart representation of their expenses, the user must click on
 	 * 'Bar Chart View' and it will show a chart of their expenses split up in a bar
@@ -210,44 +212,55 @@ public class MainController implements Initializable {
 		BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis, yAxis);
 
 		XYChart.Series<String, Number> xyChart = new XYChart.Series<String, Number>();
+		
 		String sql = "select category, amount from Account order by amount asc";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 
-		while (rs.next()) {
-			xyChart.getData().add(new XYChart.Data<String, Number>(rs.getString("category"), rs.getDouble("amount")));
-		}
+	    for(Account acc: lists) {
+	        xyChart.getData().add(new XYChart.Data<String, Number>(acc.getCategory(), acc.getAmount()));
+	    }
 
 		barChart.getData().add(xyChart);
 		barChart.setLegendVisible(false);
 
-		barChartBorderPane.setCenter(barChart);
+		Scene scene = new Scene(barChart, 500, 500);
+		Stage stage = new Stage();
+		stage.setScene(scene);
+		stage.show();
 	}
 
 	/*
-	 * to view a bar chart representation of their expenses, the user must click on
+	 * to view a pie chart representation of their expenses, the user must click on
 	 * 'Pie Chart View' and it will show a chart of their expenses sliced in a pie
 	 * chart
 	 */
 	public void goToPieChart(ActionEvent event) throws SQLException {
 		conn = MySqlConnection.ConnectDb();
 
-		PieChart pieChart = new PieChart();
-
-		ObservableList<PieChart.Data> list = FXCollections.observableArrayList();
-		String sql = "select * from Account";
+		ObservableList<Data> list = FXCollections.observableArrayList();
+		String sql = "select category, amount from Account";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
-
-		while (rs.next()) {
-			list.add(new PieChart.Data(rs.getString("category"), rs.getDouble("amount")));
+		
+		
+		for(Account acc: lists) {
+			list.addAll(new PieChart.Data(acc.getCategory(), acc.getAmount()));
 		}
-
+		
+		PieChart pieChart = new PieChart();
 		pieChart.getData().addAll(list);
 
-		pieChartBorderPane.setCenter(pieChart);
+		Scene scene = new Scene(pieChart, 500, 500);
+		Stage stage = new Stage();
+		stage.setScene(scene);
+		stage.show();
 	}
 
+	/*
+	 * method to logout user once done adding and viewing transactions user can
+	 * press logout and this method will reroute them back to the login page
+	 */
 	public void logout() {
 		try {
 			Stage mainStage = (Stage) HomePagePane.getScene().getWindow();
@@ -280,6 +293,7 @@ public class MainController implements Initializable {
 		mySqlCon.setUsername(username);
 		lists = mySqlCon.getAccountData();
 		tableTransactions.setItems(lists);
+		
 	}
 
 }

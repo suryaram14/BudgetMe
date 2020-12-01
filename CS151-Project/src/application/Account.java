@@ -42,8 +42,8 @@ public class Account {
 		return description;
 	}
 
-	public void setDescription(String category) {
-		this.category = category;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	public String getCategory() {
@@ -58,7 +58,7 @@ public class Account {
 		return amount;
 	}
 
-	public void setAmount(float amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 	

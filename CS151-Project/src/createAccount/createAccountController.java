@@ -64,9 +64,8 @@ public class createAccountController implements Initializable {
 		String username = txtUsername.getText();
 		String password = txtPassword.getText();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs151-project?useSSL=false", "root",
-					"password");
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
 			prepStmt = con.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?)");
 			prepStmt.setString(1, username);
 			prepStmt.setString(2, password);

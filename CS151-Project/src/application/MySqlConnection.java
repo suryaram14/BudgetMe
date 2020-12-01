@@ -17,9 +17,8 @@ public class MySqlConnection {
 
 	public static Connection ConnectDb() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs151-project?useSSL=false",
-					"root", "password");
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
 			return conn;
 		} catch (ClassNotFoundException | SQLException ex) {
 			System.err.println("MySqlConnection : " + ex.getMessage());
