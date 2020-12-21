@@ -1,4 +1,4 @@
-# CS151-Project
+# BudgetMe
 BudgetMe - Expense Management System
 
 Expense Management system created with java, javafx, and mysql. Users can signup/login to access their expenses. Once logged in, users can add or delete expenses and view their expenses visually with the help of a bar chart or pie chart. Once done with adding their expenses they can logout.
