@@ -3,13 +3,13 @@ package application;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import homePage.HomePageController;
+import homePage.MySqlConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,15 +45,15 @@ public class MainController implements Initializable {
 	private Hyperlink createAccLink;
 
 	// variables associated with mySQL
-	Connection con;
-	PreparedStatement prepStmt;
-	ResultSet rs;
+	Connection conn = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
 
 	// Sample
 	// username: test
 	// password: test
 
-	public void handle(ActionEvent event) {
+	public void handle(ActionEvent event) throws IOException {
 		if (event.getSource() == createAccLink) {
 			createAcc();
 		} else {
@@ -72,65 +72,58 @@ public class MainController implements Initializable {
 
 	}
 
-	public String username;
-
 	@FXML
-	void login() {
-		username = txtUsername.getText();
-		String password = txtPassword.getText();
+	void login() throws IOException {
+		conn = MySqlConnection.ConnectDb();
+		String loginSQL = "select * from users where username = ? and password = ?";
 
 		// If username and password are null, and Invalid message will appear
-		if (username.equals("") && password.equals("")) {
-			/* lblInvalid.setText("Invalid");               commented out line/error message alerted instead*/  
+		if (txtUsername.getText().equals("") || txtPassword.getText().equals("")) {  
 			Alert alertError = new Alert(AlertType.ERROR);
+			alertError.setContentText("Fields cannot be empty.");
 			alertError.showAndWait();
 		} else {
 			// To login connect mysql database with eclipse
 			// if username and password fields are blank, we can set username and passwords
 			// by inserting into mysql database
 			try {
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
-				prepStmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
-				prepStmt.setString(1, username);
-				prepStmt.setString(2, password);
-
-				rs = prepStmt.executeQuery();
+				ps = conn.prepareStatement(loginSQL);
+				ps.setString(1, txtUsername.getText());
+				ps.setString(2, txtPassword.getText());
+				rs = ps.executeQuery();
 
 				// if username and password match - go to Main page
 				if (rs.next()) {
-					try {
 						Stage loginStage = (Stage) LoginPane.getScene().getWindow();
 						loginStage.close();
 						HomePageController mainControl = new HomePageController();
-						mainControl.setUsername(username);
+						mainControl.setUsername(txtUsername.getText());
 						FXMLLoader loader = new FXMLLoader(getClass().getResource("/homePage/HomePage.FXML"));
 						loader.setController(mainControl);
 						AnchorPane pane = loader.load();
 						Scene scene = new Scene(pane, 937, 503);
 						Stage stage = new Stage();
 						stage.setScene(scene);
-						stage.show();
-						// LoginPane.getChildren().setAll(pane);
-
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						stage.show();				
 					}
 
-					// if username and password dont match, set to Invalid and clear text inputs
-				} else {
+				// if username and password dont match, set to Invalid and clear text inputs
+				else {
 					Alert alertError = new Alert(AlertType.ERROR);
-					alertError.showAndWait();
+        			alertError.setContentText("Username and/or password is wrong");
+        			alertError.showAndWait();
 				}
 			} catch (SQLException e) {
-				System.out.println(e);
-			} catch (ClassNotFoundException ex) {
-				System.out.println(ex);
+				Alert alertError = new Alert(AlertType.ERROR);
+    			alertError.setContentText("Username or password is wrong");
+    			alertError.showAndWait();
+    			System.out.println(e.getMessage());
 			}
 		}
 	}
-
+	
+	public String username;
+	
 	public String getUsername() {
 		return username;
 	}

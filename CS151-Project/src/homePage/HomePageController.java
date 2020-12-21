@@ -244,6 +244,7 @@ public class HomePageController implements Initializable {
 		
 		PieChart pieChart = new PieChart();
 		pieChart.getData().addAll(list);
+		pieChart.setTitle("Expense Distributon");
 
 		Scene scene = new Scene(pieChart, 500, 500);
 		Stage stage = new Stage();

@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import homePage.MySqlConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,11 +39,11 @@ public class createAccountController implements Initializable {
 	@FXML
 	private Hyperlink loginLink;
 
-	Connection con;
-	PreparedStatement prepStmt;
-	ResultSet rs;
+	Connection conn = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
 
-	public void handle(ActionEvent event) throws ClassNotFoundException {
+	public void handle(ActionEvent event) throws Exception {
 		if (event.getSource() == loginLink) {
 			goToLogin();
 		} else {
@@ -62,39 +63,31 @@ public class createAccountController implements Initializable {
 	}
 
 	@FXML
-	void register(ActionEvent event) throws ClassNotFoundException {
-		String username = txtUsername.getText();
-		String password = txtPassword.getText();
-		
-		if (username.equals("") && password.equals("")) {
+	void register(ActionEvent event) throws Exception {
+		conn = MySqlConnection.ConnectDb();
+		String registerSQL = "insert into users(username, password) values(?, ?)";
+		if (txtUsername.getText().equals("") || txtPassword.getText().equals("")) {
 			Alert alertError = new Alert(AlertType.ERROR);
+			alertError.setContentText("Fields cannot be empty.");
 			alertError.showAndWait();
 		}
-		
 		else {
-		
 			try {
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Account_database", "root", "1234");
-				prepStmt = con.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?)");
-				prepStmt.setString(1, username);
-				prepStmt.setString(2, password);
-				prepStmt.executeUpdate();
-				try {
-					AnchorPane pane = FXMLLoader.load(getClass().getResource("/application/Main.FXML"));
-					createAccPane.getChildren().setAll(pane);
-		
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} catch (SQLException e) {
+				ps = conn.prepareStatement(registerSQL);
+				ps.setString(1, txtUsername.getText());
+				ps.setString(2, txtPassword.getText());
+				ps.execute();
+				
+				AnchorPane pane = FXMLLoader.load(getClass().getResource("/application/Main.FXML"));
+				createAccPane.getChildren().setAll(pane);
+			} 
+			catch (SQLException e) {
 				System.out.print(e);
-			} catch (ClassNotFoundException ex) {
-				System.out.println(ex);
+				Alert alertError = new Alert(AlertType.ERROR);
+    			alertError.setContentText("Username already exists. Please choose another username.");
+    			alertError.showAndWait();
 			}
 		}
-
 	}
 
 	@Override
